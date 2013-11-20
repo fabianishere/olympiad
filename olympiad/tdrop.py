@@ -17,7 +17,6 @@
 #
 
 import sys
-import math
 
 # This module contains an implementation of a Tetris-like game called T-Drop.
 
@@ -32,7 +31,7 @@ import math
 #
 
 # This module is made as a solution to problem 2 of the Dutch 
-# Olympiad of Informatics. 
+# Olympiad in Informatics. 
 #
 # See http://www.informaticaolympiade.nl for more information.
 
