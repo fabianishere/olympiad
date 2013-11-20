@@ -33,7 +33,7 @@ import abc
 #
 
 # This module is made as a solution to problem 1 of the Dutch 
-# Olympiad of Informatics. 
+# Olympiad if Informatics. 
 #
 # See http://www.informaticaolympiade.nl for more information.
 
