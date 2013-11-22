@@ -26,7 +26,7 @@ import sys
 #	# create board
 #	board = tdrop.Board(6, 9) # width, height
 #	# create a block.
-#	block = tdrop.TBlock(1, tdrop.Direction.UP)
+#	block = tdrop.TBlock(1, 1, 1) # x, y, direction
 #	board.drop(tdrop)
 #
 
@@ -239,7 +239,7 @@ def calc_max(width, height):
 				maximum += 1
 		return maximum
 	elif width == 5 or height == 5:
-		if width * height % 2 == 0 and width * height % 2 != 0:
+		if width * height % 2 == 0 and width * height % 4 != 0:
 			return int((width * height - 2) / 4)
 		elif width * height % 3 == 0:
 			return int((width * height - 3) / 4)
