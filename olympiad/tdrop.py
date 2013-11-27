@@ -223,21 +223,19 @@ def calc_max(width, height):
 	elif width % 4 == 2 and height % 4 == 0:
 		return int((width * height - (width % 4 + 2)) / 4)
 	elif width == 3 and height != 3:
-		maximum = 2
-		if height == 4:
-			return maximum
-		for index in range(5, height + 1):
-			if index % 3 == 2 or index % 3 == 0:
-				maximum += 1
-		return maximum
+		if height % 3 == 0:
+			return int((width * height - (height / 3 + 1)) / 4) + 1
+		elif height % 3 == 1:
+			return int((width * height - (((height + 2) / 3) + 1)) / 4)
+		elif height % 3 == 2:
+			return int((width * height - (((height + 1) / 3) + 1)) / 4)
 	elif height == 3 and width != 3:
-		maximum = 2
-		if width == 4:
-			return maximum
-		for index in range(5, width + 1):
-			if index % 3 == 2 or index % 3 == 0:
-				maximum += 1
-		return maximum
+		if width % 3 == 0:
+			return int((width * height - (width / 3 + 1)) / 4) + 1
+		elif width % 3 == 1:
+			return int((width * height - (((width + 2) / 3) + 1)) / 4)
+		elif width % 3 == 2:
+			return int((width * height - (((width + 1) / 3) + 1)) / 4)
 	elif width == 5 or height == 5:
 		if width * height % 2 == 0 and width * height % 4 != 0:
 			return int((width * height - 2) / 4)
@@ -247,7 +245,43 @@ def calc_max(width, height):
 			return int((width * height - 4) / 4)
 		elif width * height % 5 == 0:
 			return int((width * height - 5) / 4)
-				
+	elif width == 6 and height != 6:
+		if height % 6 == 0:
+			return int((width * height - 4) / 4)
+		elif height % 3 == 0:
+			return int((width * height - 2) / 4)
+		elif (height + 1) % 6 == 0:
+			return int((width * height - 6) / 4)
+		elif (height + 1) % 3 == 0:
+			return int((width * height - 4)	/ 4)
+	elif height == 6 and width != 6:
+		if width % 6 == 0:
+			return int((width * height - 4) / 4)
+		elif width % 3 == 0:
+			return int((width * height - 2) / 4)
+		elif (width + 1) % 6 == 0:
+			return int((width * height - 6) / 4)
+		elif (width + 1) % 3 == 0:
+			return int((width * height - 4) / 4)
+	elif width == 7 and height != 7:
+		if height % 4 == 0:
+			return int((width * height - 4) / 4)
+		elif height % 4 == 1:
+			return int((width * height - 3) / 4)
+		elif height % 4 == 2:
+			return int((width * height - 2) / 4)
+		elif height % 4 == 3:
+			return int((width * height - 5) / 4)
+	elif height == 7 and width != 7:
+		if width % 4 == 0:
+			return int((width * height - 4) / 4)
+		elif width % 4 == 1:
+			return int((width * height - 3) / 4)
+		elif width % 4 == 2:
+			return int((width * height - 2) / 4)
+		elif width % 4 == 3:
+			return int((width * height - 5) / 4)
+			
 def b():
 	width = int(input())
 	height = int(input())
