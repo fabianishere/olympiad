@@ -193,9 +193,6 @@ def a():
 		direction = int(line[1])
 		block = TBlock(x, height, direction)
 		if not board.add_block(block):
-			#print(board)
-			#raise Exception("What? Block is not valid at spawn? Block: {0}".format(block)))
-			# Suppress this warning, just continue. 
 			continue
 		while True:
 			block.y -= 1
