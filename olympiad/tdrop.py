@@ -24,7 +24,7 @@ import sys
 #
 #	import tdrop
 #	# create board
-#	board = tdrop.Board(6, 9) # width, height
+#	board = tdrop.Board(6, 9) # width, length
 #	# create a block.
 #	block = tdrop.TBlock(1, 1, 1) # x, y, direction
 #	board.drop(tdrop)
@@ -39,22 +39,22 @@ class Board(object):
 	"""
 	The Board class represents a grid which contains blocks.
 	"""
-	def __init__(self, width = 6, height = 9):
+	def __init__(self, width = 6, length = 9):
 		"""
 		Initializes a new Board instance.
 		
 		Keyword arguments:
 		width -- the width of the grid (default = 6)
-		height -- the height of the grid (default = 9)
+		length -- the length of the grid (default = 9)
 		"""
 		self.width = width
-		self.height = height
+		self.length = length
 		self.blocks = []
 		
 	def is_valid(self, block):
 		for rectangle in block.points:
 			x, y = rectangle
-			if x < 0 or x >= self.width or y < 0 or y >= self.height:
+			if x < 0 or x >= self.width or y < 0 or y >= self.length:
 				return False
 		for other_block in self.blocks:
 			if other_block != block and block.conflict(other_block):
@@ -82,7 +82,7 @@ class Board(object):
 		"""
 		string = "-" * self.width * 2
 		string += "\n"
-		for line in reversed(range(0, self.height)):
+		for line in reversed(range(0, self.length)):
 			string += "|"
 			for column in range(0, self.width):
 				if not self.blocks:
@@ -115,7 +115,7 @@ class Block(object):
 		"""
 		Calculates the max amount of this block in the given board.
 		"""
-		return board.width * board.height
+		return board.width * board.length
 		
 		
 	def uses(self, x, y = 0):
@@ -185,13 +185,13 @@ class TBlock(Block):
 def a():
 	input = open('in.txt')
 	width = int(input.readline())
-	height = int(input.readline()) + 1
-	board = Board(width, height + 5)
+	length = int(input.readline()) + 1
+	board = Board(width, length + 5)
 	
 	for line in input:
 		x = ord(line[0].lower()) - 97
 		direction = int(line[1])
-		block = TBlock(x, height, direction)
+		block = TBlock(x, length, direction)
 		if not board.add_block(block):
 			continue
 		while True:
@@ -203,89 +203,128 @@ def a():
 	for block in board.blocks:
 		output.write("{0}\n".format(block.y + 1))
 		
-def calc_max(width, height):
+def calc_max(length, width):
 	"""
-	Calculates the maximum amount of this block in the given board.
+	Calculates the maximum amount of T-shaped objects in a rectangle of the
+	  given size.
+
+	Keyword arguments:
+	length -- the length of the rectangle.
+	width -- the width of the rectangle.
+	
+	Returns the maximum amount of T-shaped objects in a rectangle of the given
+	  size.
 	"""
-	if width < 2 or height < 2:
+	surface = length * width
+	if length < 2 or width < 2:
 		return 0
-	elif width * height < 10:
+	elif surface < 10:
 		return 1
-	elif width  % 4 == height % 4 == 0:
-		return int(width * height / 4)
-	elif width  % 4 == height % 4 == 2 or width % 4 == 0 or height % 4 == 0:
-		return int((width * height - 4) / 4)
-	elif width % 4 == 0 and height % 4 == 2:
-		return int((width * height - (height % 4 + 2)) / 4)
-	elif width % 4 == 2 and height % 4 == 0:
-		return int((width * height - (width % 4 + 2)) / 4)
-	elif width == 3 and height != 3:
-		if height % 3 == 0:
-			return int((width * height - (height / 3 + 1)) / 4) + 1
-		elif height % 3 == 1:
-			return int((width * height - (((height + 2) / 3) + 1)) / 4)
-		elif height % 3 == 2:
-			return int((width * height - (((height + 1) / 3) + 1)) / 4)
-	elif height == 3 and width != 3:
-		if width % 3 == 0:
-			return int((width * height - (width / 3 + 1)) / 4) + 1
-		elif width % 3 == 1:
-			return int((width * height - (((width + 2) / 3) + 1)) / 4)
-		elif width % 3 == 2:
-			return int((width * height - (((width + 1) / 3) + 1)) / 4)
-	elif width == 5 or height == 5:
-		if width * height % 2 == 0 and width * height % 4 != 0:
-			return int((width * height - 2) / 4)
-		elif width * height % 3 == 0:
-			return int((width * height - 3) / 4)
-		elif width * height % 4 == 0:
-			return int((width * height - 4) / 4)
-		elif width * height % 5 == 0:
-			return int((width * height - 5) / 4)
-	elif width == 6 and height != 6:
-		if height % 6 == 0:
-			return int((width * height - 4) / 4)
-		elif height % 3 == 0:
-			return int((width * height - 2) / 4)
-		elif (height + 1) % 6 == 0:
-			return int((width * height - 6) / 4)
-		elif (height + 1) % 3 == 0:
-			return int((width * height - 4)	/ 4)
-	elif height == 6 and width != 6:
-		if width % 6 == 0:
-			return int((width * height - 4) / 4)
-		elif width % 3 == 0:
-			return int((width * height - 2) / 4)
-		elif (width + 1) % 6 == 0:
-			return int((width * height - 6) / 4)
-		elif (width + 1) % 3 == 0:
-			return int((width * height - 4) / 4)
-	elif width == 7 and height != 7:
-		if height % 4 == 0:
-			return int((width * height - 4) / 4)
-		elif height % 4 == 1:
-			return int((width * height - 3) / 4)
-		elif height % 4 == 2:
-			return int((width * height - 2) / 4)
-		elif height % 4 == 3:
-			return int((width * height - 5) / 4)
-	elif height == 7 and width != 7:
-		if width % 4 == 0:
-			return int((width * height - 4) / 4)
-		elif width % 4 == 1:
-			return int((width * height - 3) / 4)
-		elif width % 4 == 2:
-			return int((width * height - 2) / 4)
-		elif width % 4 == 3:
-			return int((width * height - 5) / 4)
-			
-def b():
-	width = int(input())
-	height = int(input())
-	print(calc_max(width, height))
+	elif length  % 4 == width % 4 == 0:
+		return int(surface / 4)
+	elif length  % 4 == width % 4 == 2 or length % 4 == 0 or width % 4 == 0:
+		return int((surface - 4) / 4)
+	elif length % 4 == 0 and width  % 4 == 2:
+		return int((surface - (length % 4 + 2)) / 4)
+	elif length % 4 == 2 and width % 4 == 0:
+		return int((surface - (width % 4 + 2)) / 4)
+	elif length == 3 or width == 3:
+		return length == 3 and calc_max_three(width) or calc_max_three(length)
+	elif length == 5 or width == 3:
+		return length == 5 and calc_max_five(width) or calc_max_five(length)
+	elif length == 6 or width == 6:
+		return length == 6 and calc_max_six(width) or calc_max_six(length)
+	elif length == 7 or width == 7:
+		return length == 7 and calc_max_seven(width) or calc_max_seven(length)
+
+def calc_max_three(length):
+	"""
+	Assumes that the width equals three and calculates the maximum amount of 
+	  T-shaped objects in a rectangle with size __3x__.
+
+	Keyword arguments:
+	length -- the length of the rectangle.
+
+	Returns the maximum amount of T-shaped objects in a rectangle with the
+	  size __3x__
+	"""
+	surface = 3 * length
+	if length == 3:
+		return 1
+	elif length % 3 == 0:
+		return int((surface - (l / 3 + 1)) / 4) + 1
+	elif length % 3 == 1:
+		return int((surface - (((length + 2) / 3) + 1)) / 4)
+	elif length % 3 == 2:
+		return int((surface - (((l + 1) / 3) + 1)) / 4)
+
+def calc_max_five(length):
+	"""
+	Assumes that the width equals five and calculates the maximum amount of
+	  T-shaped objects in a rectangle with size __5x__.
+
+	Keyword arguments:
+	length -- the length of the rectangle
+
+	Returns the maximum amount of T-shaped objects in a rectangle with the 
+	  size __5x__
+	"""
+	surface = 5 * length
+	if surface % 2 == 0 != surface:
+		return int((surface - 2) / 4)
+	elif surface % 3 == 0:
+		return int((surface - 3) / 4)
+	elif surface % 4 == 0:
+		return int((surface - 4) / 4)
+	elif surface % 5 == 0:
+		return int((surface - 5) / 4)
+
+def calc_max_six(length):
+	"""
+	Assumes that the width equals six and calculates the maximum amount of
+	  T-shaped objects in a rectangle with size __6x__.
+
+	Keyword arguments:
+	l -- the length of the rectangle
+
+	Returns the maximum amount of T-shaped objects in a rectangle with the 
+	  size __6x__
+	"""
+	surface = 6 * length
+	if length % 6 == 0:
+		return int((surface - 4) / 4)
+	elif length % 3 == 0:
+		return int((surface - 2) / 4)
+	elif (length + 1) % 6 == 0:
+		return int((surface - 6) / 4)
+	elif (length + 1) % 3 == 0:
+		return int((surface - 4) / 4)
+
+def calc_max_seven(length):
+	"""
+	Assumes that the width equals seven and calculates the maximum amount of
+	  T-shaped objects in a rectangle with size __7x__.
+
+	Keyword arguments:
+	length -- the length of the rectangle
+
+	Returns the maximum amount of T-shaped objects in a rectangle with the 
+	  size __7x__
+	"""
+	surface = 7 * length
+	if length % 4 == 0:
+		return int((surface - 4) / 4)
+	elif length % 4 == 1:
+		return int((surface - 3) / 4)
+	elif length % 4 == 2:
+		return int((surface - 2) / 4)
+	elif length % 4 == 3:
+		return int((surface - 5) / 4)
 
 if __name__ == "__main__":
-	if len(sys.argv) > 1 and sys.argv[1] == "b":
-		b()
-	else:
+	if len(sys.argv) <= 1: 
 		a()
+	elif sys.argv[1] == "b":
+		width = int(input())
+		length = int(input())
+		print(calc_max(length, width))
