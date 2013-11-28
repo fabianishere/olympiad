@@ -209,7 +209,7 @@ class DutchConverter(BaseConverter):
 		# This if construction will check if the integer value of the current
 		# character equals one. If so, use words from the exception list.
 		if int(reverse_string[index]) == 1:
-			result = self.exceptions[long(reverse_string[index - 1])]
+			result = self.exceptions[int(reverse_string[index - 1])]
 		elif int(reverse_string[index]) != 0:
 			if int(reverse_string[index - 1]) != 0:
 				# As already mentioned, "drie" comes in front of "twintig" when 
@@ -312,6 +312,9 @@ class DutchConverter(BaseConverter):
 		return result
 
 if __name__ == "__main__":
+	"""
+	Maint entry point for this program.
+	"""
 	converter = DutchConverter()
 	while True:
 		print(converter.convert(raw_input()))
