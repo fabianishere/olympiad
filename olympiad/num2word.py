@@ -20,9 +20,7 @@ import abc
 # This module contains an abstract number to word converter and an 
 # implementation of the converter for the Dutch language.
 #
-# Please note that this module requires the abc module in order to run, which
-# means that if your using CPython, the version must be higher than 
-# version 2.5.
+# Please note that this module requires the abc module in order to run.
 
 # Example of the usage of this module:
 #
