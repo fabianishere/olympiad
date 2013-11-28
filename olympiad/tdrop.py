@@ -270,14 +270,7 @@ def calc_max_six(length):
 	  size __6x__
 	"""
 	surface = 6 * length
-	if length % 6 == 0:
-		return int((surface - 4) / 4)
-	elif length % 3 == 0:
-		return int((surface - 2) / 4)
-	elif (length + 1) % 6 == 0:
-		return int((surface - 6) / 4)
-	elif (length + 1) % 3 == 0:
-		return int((surface - 4) / 4)
+	return int((surface - (2 + (2 * length % 2))) / 4)
 
 def calc_max_seven(length):
 	"""
