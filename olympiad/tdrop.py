@@ -199,6 +199,8 @@ def calc_max(length, width):
 		return 0
 	elif surface < 10:
 		return 1
+	elif length == 2 or width == 2:
+		return length == 2 and calc_max_two(width) or calc_max_two(length)
 	elif length  % 4 == width % 4 == 0:
 		return int(surface / 4)
 	elif length  % 4 == width % 4 == 2 or length % 4 == 0 or width % 4 == 0:
@@ -216,6 +218,23 @@ def calc_max(length, width):
 	elif length == 7 or width == 7:
 		return length == 7 and calc_max_seven(width) or calc_max_seven(length)
 
+def calc_max_two(length):
+	"""
+	Assumes that the width equals two and calculates the maximum amount of 
+	  T-shaped objects in a rectangle with size __2x__.
+
+	Keyword arguments:
+	length -- the length of the rectangle.
+
+	Returns the maximum amount of T-shaped objects in a rectangle with the
+	  size __2x__
+	"""
+	surface = 2 * length
+	if length <= 2 or surface < 6:
+		return 0
+	return int((surface - (2 + (2 * length % 2))) / 4)
+	
+		
 def calc_max_three(length):
 	"""
 	Assumes that the width equals three and calculates the maximum amount of 
@@ -269,8 +288,7 @@ def calc_max_six(length):
 	Returns the maximum amount of T-shaped objects in a rectangle with the 
 	  size __6x__
 	"""
-	surface = 6 * length
-	return int((surface - (2 + (2 * length % 2))) / 4)
+	return int((6 * length - (2 + (2 * length % 2))) / 4)
 
 def calc_max_seven(length):
 	"""
