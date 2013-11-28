@@ -252,11 +252,11 @@ def calc_max_five(length):
 	if surface % 2 == 0 != surface % 4:
 		return int((surface - 2) / 4)
 	elif surface % 3 == 0:
-		return int((surface - 3) / 4)
+		return int((surface - 5) / 4)
 	elif surface % 4 == 0:
 		return int((surface - 4) / 4)
 	elif surface % 5 == 0:
-		return int((surface - 5) / 4)
+		return int((surface - 3) / 4)
 
 def calc_max_six(length):
 	"""
