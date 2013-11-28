@@ -29,7 +29,9 @@ class TestDutchConverter(unittest.TestCase):
 			83 : "drie&ntachtig",
 			3943 : "drieduizend negenhonderddrie&nveertig",
 			9999 : "negenduizend negenhonderdnegenennegentig",
-			193920 : "honderddrie&nnegentigduizend negenhonderdtwintig"
+			193920 : "honderddrie&nnegentigduizend negenhonderdtwintig",
+			134 : "honderdvierendertig",
+			32 : "twee&ndertig"
 		}
 		self.converter = olympiad.num2word.DutchConverter()
 	

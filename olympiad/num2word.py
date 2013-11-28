@@ -198,7 +198,7 @@ class DutchConverter(BaseConverter):
 		#   10 => "ten"
 		# 
 		if (int(reverse_string[index]) == 0 and length == 1) or int(reverse_string[index]) != 0:
-			result = self.units[long(reverse_string[index])]
+			result = self.units[int(reverse_string[index])]
 			
 		# Jump to next number or return the result if there isn't a next number.
 		index += 1
