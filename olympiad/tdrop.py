@@ -201,14 +201,6 @@ def calc_max(length, width):
 		return 1
 	elif length == 2 or width == 2:
 		return length == 2 and calc_max_two(width) or calc_max_two(length)
-	elif length  % 4 == width % 4 == 0:
-		return int(surface / 4)
-	elif length  % 4 == width % 4 == 2 or length % 4 == 0 or width % 4 == 0:
-		return int((surface - 4) / 4)
-	elif length % 4 == 0 and width  % 4 == 2:
-		return int((surface - (length % 4 + 2)) / 4)
-	elif length % 4 == 2 and width % 4 == 0:
-		return int((surface - (width % 4 + 2)) / 4)
 	elif length == 3 or width == 3:
 		return length == 3 and calc_max_three(width) or calc_max_three(length)
 	elif length == 5 or width == 5:
@@ -217,6 +209,14 @@ def calc_max(length, width):
 		return length == 6 and calc_max_six(width) or calc_max_six(length)
 	elif length == 7 or width == 7:
 		return length == 7 and calc_max_seven(width) or calc_max_seven(length)
+	elif length  % 4 == width % 4 == 0:
+		return int(surface / 4)
+	elif length  % 4 == width % 4 == 2 or length % 4 == 0 or width % 4 == 0:
+		return int((surface - 4) / 4)
+	elif length % 4 == 0 and width % 4 == 2:
+		return int((surface - (length % 4 + 2)) / 4)
+	elif length % 4 == 2 and width % 4 == 0:
+		return int((surface - (width % 4 + 2)) / 4)
 
 def calc_max_two(length):
 	"""
@@ -267,15 +267,7 @@ def calc_max_five(length):
 	Returns the maximum amount of T-shaped objects in a rectangle with the 
 	  size __5x__
 	"""
-	surface = 5 * length
-	if surface % 2 == 0 != surface % 4:
-		return int((surface - 2) / 4)
-	elif surface % 3 == 0:
-		return int((surface - 5) / 4)
-	elif surface % 4 == 0:
-		return int((surface - 4) / 4)
-	elif surface % 5 == 0:
-		return int((surface - 3) / 4)
+	return int((5 * length - ([5, 2, 3, 4][(length - 1) % 4])) / 4)
 
 def calc_max_six(length):
 	"""
