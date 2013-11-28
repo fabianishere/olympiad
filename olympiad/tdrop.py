@@ -181,28 +181,7 @@ class TBlock(Block):
 			self.points = [(x, y), (x + 1, y), (x + 2, y), (x + 1, y - 1)]
 		elif direction == 4:
 			self.points = [(x, y), (x + 1, y + 1), (x + 1, y - 1), (x + 1, y)]
-	
-def a():
-	input = open('in.txt')
-	width = int(input.readline())
-	length = int(input.readline()) + 1
-	board = Board(width, length + 5)
-	
-	for line in input:
-		x = ord(line[0].lower()) - 97
-		direction = int(line[1])
-		block = TBlock(x, length, direction)
-		if not board.add_block(block):
-			continue
-		while True:
-			block.y -= 1
-			if not board.is_valid(block):
-				block.y += 1
-				break
-	output = open('out.txt', "w")
-	for block in board.blocks:
-		output.write("{0}\n".format(block.y + 1))
-		
+			
 def calc_max(length, width):
 	"""
 	Calculates the maximum amount of T-shaped objects in a rectangle of the
@@ -216,7 +195,7 @@ def calc_max(length, width):
 	  size.
 	"""
 	surface = length * width
-	if length < 2 or width < 2:
+	if length < 2 or width < 2 or surface < 6:
 		return 0
 	elif surface < 10:
 		return 1
@@ -230,7 +209,7 @@ def calc_max(length, width):
 		return int((surface - (width % 4 + 2)) / 4)
 	elif length == 3 or width == 3:
 		return length == 3 and calc_max_three(width) or calc_max_three(length)
-	elif length == 5 or width == 3:
+	elif length == 5 or width == 5:
 		return length == 5 and calc_max_five(width) or calc_max_five(length)
 	elif length == 6 or width == 6:
 		return length == 6 and calc_max_six(width) or calc_max_six(length)
@@ -252,11 +231,11 @@ def calc_max_three(length):
 	if length == 3:
 		return 1
 	elif length % 3 == 0:
-		return int((surface - (l / 3 + 1)) / 4) + 1
+		return int((surface - (length / 3 + 1)) / 4) + 1
 	elif length % 3 == 1:
 		return int((surface - (((length + 2) / 3) + 1)) / 4)
 	elif length % 3 == 2:
-		return int((surface - (((l + 1) / 3) + 1)) / 4)
+		return int((surface - (((length + 1) / 3) + 1)) / 4)
 
 def calc_max_five(length):
 	"""
@@ -270,7 +249,7 @@ def calc_max_five(length):
 	  size __5x__
 	"""
 	surface = 5 * length
-	if surface % 2 == 0 != surface:
+	if surface % 2 == 0 != surface % 4:
 		return int((surface - 2) / 4)
 	elif surface % 3 == 0:
 		return int((surface - 3) / 4)
@@ -322,8 +301,29 @@ def calc_max_seven(length):
 		return int((surface - 5) / 4)
 
 if __name__ == "__main__":
+	"""
+	Main entry point for this program.
+	"""
 	if len(sys.argv) <= 1: 
-		a()
+		input = open('in.txt')
+		width = int(input.readline())
+		length = int(input.readline()) + 1
+		board = Board(width, length + 5)
+	
+		for line in input:
+			x = ord(line[0].lower()) - 97
+			direction = int(line[1])
+			block = TBlock(x, length, direction)
+			if not board.add_block(block):
+				continue
+			while True:
+				block.y -= 1
+				if not board.is_valid(block):
+					block.y += 1
+					break
+		output = open('out.txt', "w")
+		for block in board.blocks:
+			output.write("{0}\n".format(block.y + 1))
 	elif sys.argv[1] == "b":
 		width = int(input())
 		length = int(input())
