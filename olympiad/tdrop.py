@@ -250,7 +250,7 @@ def calc_max_three(length):
 	if length == 3:
 		return 1
 	elif length % 3 == 0:
-		return int((surface - (length / 3 + 1)) / 4) + 1
+		return int((surface - (length / 3)) / 4)
 	elif length % 3 == 1:
 		return int((surface - (((length + 2) / 3) + 1)) / 4)
 	elif length % 3 == 2:
