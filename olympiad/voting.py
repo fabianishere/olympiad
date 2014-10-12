@@ -19,7 +19,7 @@
 # TODO: explain what it does
 if __name__ == "__main__":
 	k, d = [int(input()) for i in range(0, 2)]
-	preferences = list([list(map(lambda x: int(x), input().split(" "))) for i in range(0, d)])
+	preferences = list([list(map(lambda x: int(x), input().split())) for i in range(0, d)])
 	voting = [0] * k
 	while True:
 		for preference in preferences:
