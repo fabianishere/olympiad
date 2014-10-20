@@ -88,4 +88,4 @@ if __name__ == "__main__":
 		unvisited, path = results[0]
 		print(len(path))
 		for x, y in path:
-			print("{0}{1}".format(chr(x + ord('a')), m - y))
+			print("{0}{1}".format(chr(x + ord('a')), n - y))
