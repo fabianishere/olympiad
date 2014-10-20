@@ -73,7 +73,7 @@ def traverse(matrix, size, point, step, path = []):
 	distances = [min(x, m - x - 1, y, n - y - 1) for x, y in points]
 	minimum = min(distances)
 	points = [points[i] for i, d in enumerate(distances) if d == minimum]  
-
+	# Try the points that are available and collect the results.
 	for p in points:
 		res += traverse(matrix, size, p, step, path)
 	return res
