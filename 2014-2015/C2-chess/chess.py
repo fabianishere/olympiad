@@ -83,7 +83,6 @@ if __name__ == "__main__":
 	m, n = size
 	matrix = [[0] * m for _ in range(n)]
 	results = traverse(matrix, size, (0, 0), step)
-	print(results)
 	results = sorted(results, key=lambda k: k[0])
 	if len(results) > 0:
 		unvisited, path = results[0]
