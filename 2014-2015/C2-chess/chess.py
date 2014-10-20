@@ -17,8 +17,8 @@
 
 def traverse(matrix, size, point, step, path = []):
 	x, y = point
-	w, l = size
-	xs, ys = step
+	m, n = size
+	dx, dy = step
 	res = []
 
 	# Clone path. Faster than copy.copy()
@@ -30,52 +30,62 @@ def traverse(matrix, size, point, step, path = []):
 	matrix[y][x] = len(path)
 
 	# Test if all points have been visited.
-	if matrix[y][x] == w * l:
+	if matrix[y][x] == m * n:
 		return [(0, path)]
 	# All path we can take, ignoring the boundaries of the matrix
 	#	and the values of the points.
 	points = set([
-		(x - xs, y - ys),
-		(x - ys, y - xs),
+		(x - dx, y - dy),
+		(x - dy, y - dx),
 
-		(x + xs, y - ys),
-		(x + ys, y - xs),
+		(x + dx, y - dy),
+		(x + dy, y - dx),
 
-		(x - xs, y + ys),
-		(x - ys, y + xs),
+		(x - dx, y + dy),
+		(x - dy, y + dx),
 		
-		(x + xs, y + ys),
-		(x + ys, y + xs)	
+		(x + dx, y + dy),
+		(x + dy, y + dx)	
 	])
 	# Remove points that lie beyond the boundaries of the matrix.
-	points = [(m, n) for m, n in points if 0 <= m < w and 0 <= n < l]
+	points = [(x, y) for x, y in points if 0 <= x < m and 0 <= y < n]
 	# Remove points that have already been visited.
-	points = [(m, n) for m, n in points if matrix[n][m] == 0]
+	points = [(x, y) for x, y in points if matrix[y][x] == 0]
 	# Check if there are still points available to visit.
 	if not points:
 		# Yep, we're fucked now.
-		return [(w * l - matrix[y][x], path)]
-	# Get the distance from the points to the boundaries.
-	ds = [min(m, w - m - 1) + min(n, l - n - 1) for m, n in points]
-	# Shortest distance from a point to the boundaries of the matrix found.
-	minimum = min(ds)
-	points = [points[i] for i, d in enumerate(ds) if d == minimum]
-	ds = [min(m, w - m - 1, n, l - n - 1) for m, n in points]
-	minimum = min(ds)
-	points = [points[i] for i, d in enumerate(ds) if d == minimum]  
-	# Visit the best points available.
+		return [(m * n - matrix[y][x], path)]
+	# Refine the points we should visit.
+	# Get the points with the shortest distance to the boundaries where
+	#	distance is the distance to the m boundaries plus the 
+	#	distance to the n boundaries:
+	#
+	#	d = min(x, m - x - 1) + min(y, n - y - 1)
+	distances = [min(x, m - x - 1) + min(y, n - y - 1) for x, y in points]
+	minimum = min(distances)
+	points = [points[i] for i, d in enumerate(distances) if d == minimum]
+	# Refine the points we should visit for a final time.
+	# We should only visit the points with
+	# 	the shortest distance to the boundaries where distance
+	#	is either the distance to the x boundaries or the y boundaries:
+	#
+	#	d = min(x, m - x - 1, y, n - y - 1)
+	distances = [min(x, m - x - 1, y, n - y - 1) for x, y in points]
+	minimum = min(distances)
+	points = [points[i] for i, d in enumerate(distances) if d == minimum]  
+
 	for p in points:
-		res.extend(traverse(matrix, size, p, step, path))
+		res += traverse(matrix, size, p, step, path)
 	return res
 
 if __name__ == "__main__":
 	size, step = [list(map(lambda x: int(x), input().split())) for _ in range(2)]
-	w, h = size
-	matrix = [[0] * w for _ in range(h)]
+	m, n = size
+	matrix = [[0] * m for _ in range(n)]
 	results = traverse(matrix, size, (0, 0), step)
 	results = sorted(results, key=lambda k: k[0])
 	if len(results) > 0:
 		unvisited, path = results[0]
 		print(len(path))
 		for x, y in path:
-			print("{0}{1}".format(chr(x + ord('a')), h - y))
+			print("{0}{1}".format(chr(x + ord('a')), m - y))
