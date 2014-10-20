@@ -17,12 +17,14 @@
 import copy, time
 
 def traverse(matrix, size, point, step, steps = []):
-	res = []
 	x, y = point
 	xb, yb = size
 	xs, ys = step
+	res = []
+
 	matrix = copy.deepcopy(matrix)
 	matrix[y][x] += 1
+
 	steps = copy.deepcopy(steps)
 	steps.append(point)
 
@@ -30,29 +32,46 @@ def traverse(matrix, size, point, step, steps = []):
 	for row in matrix:
 		print(row)
 	time.sleep(0.05)
+
+	# Get all unvisited points in the matrix.
 	test = [x for y in matrix for x in filter(lambda x: x == 0, y)]
-	if len(test) <= 0:
-		return [(True, len(steps), steps)]
-	if 0 <= x + xs < xb and 0 <= y + ys < yb and matrix[y + ys][x + xs] == 0:
-		res.extend(traverse(matrix, size, (x + xs, y + ys), step, steps))
-	if 0 <= x - xs < xb and 0 <= y + ys < yb and matrix[y + ys][x - xs] == 0:
-		res.extend(traverse(matrix, size, (x - xs, y + ys), step, steps))
-	if 0 <= x + ys < xb and 0 <= y - xs < yb and matrix[y - xs][x + ys] == 0:
-		res.extend(traverse(matrix, size, (x + ys, y - xs), step, steps)) 
-	if 0 <= x - xs < xb and 0 <= y - ys < yb and matrix[y - ys][x - xs] == 0:
-		res.extend(traverse(matrix, size, (x - xs, y - ys), step, steps))
-	if 0 <= x + xs < xb and 0 <= y - ys < yb and matrix[y - ys][x + xs] == 0:
-		res.extend(traverse(matrix, size, (x + xs, y - ys), step, steps))
- 
-	if 0 <= x + ys < xb and 0 <= y + xs < yb and matrix[y + xs][x + ys] == 0:
-		res.extend(traverse(matrix, size, (x + ys, y + xs), step, steps))
-	if 0 <= x - ys < xb and 0 <= y + xs < yb and matrix[y + xs][x - ys] == 0:
-		res.extend(traverse(matrix, size, (x - ys, y + xs), step, steps))
-	if 0 <= x - ys < xb and 0 <= y - xs < yb and matrix[y - xs][x - ys] == 0:
-		res.extend(traverse(matrix, size, (x - ys, y - xs), step, steps))
-	if 0 <= x + ys < xb and 0 <= y - xs < yb and matrix[y - xs][x + ys] == 0:
-		res.extend(traverse(matrix, size, (x + ys, y - xs), step, steps))
-	return res
+	if not len(test):
+		# Return if all points in the matrix have been visited.
+		return [(True, steps)]
+	# All path we can take, ignoring the boundaries of the matrix
+	#	and the values of the points.
+	points = [
+		(x - xs, y - ys),
+		(x + xs, y - ys),
+		(x - xs, y + ys),
+		(x + xs, y + ys),
+		(x - ys, y - xs),
+		(x + ys, y - xs),
+		(x - ys, y + xs),
+		(x + ys, y + xs)
+	]
+	# Remove points that lie beyond the boundaries of the matrix.
+	points = filter(lambda point: 0 <= point[0] < xb and 0 <= point[1] < yb, points)
+	# Remove points that have already been visited.
+	points = filter(lambda point: matrix[point[1]][point[0]] == 0, points)
+	points = list(points)
+	# Check if there are still points available to visit.
+	if not points:
+		# Yep, we're fucked now.
+		# You'll enter a infinite loop now.
+		return [(False, steps)]
+	# Get the distance from the points to the boundaries.
+	db = map(lambda point: min([point[0], xb - point[0]]) + min([point[1], yb - point[1]]), points)
+	db = list(db)
+	# Shortest distance from a point to the boundaries of the matrix found.
+	minimum = min(db)
+	# Try all points that share the minimum.
+	while minimum in db:
+		index = db.index(minimum)
+		best = points[index]
+		res.extend(traverse(matrix, size, best, step, steps))
+		db.pop(index)
+	return res 
 
 if __name__ == "__main__":
 	size = list(map(lambda x: int(x), input().split()))
