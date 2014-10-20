@@ -14,7 +14,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import time
 
 def traverse(matrix, size, point, step, path = []):
 	x, y = point
@@ -30,20 +29,12 @@ def traverse(matrix, size, point, step, path = []):
 	matrix = [row[:] for row in matrix]
 	matrix[y][x] = len(path)
 
-	# Debugging
-	#print("point={0}, steps={1}".format(point, len(path)))
-	#for row in matrix:
-	#	print(row)
-	#time.sleep(0.5)
-	
-	# Get all unvisited points in the matrix.
-	test = [x for y in matrix for x in filter(lambda x: x == 0, y)]
-	if not len(test):
-		# Return if all points in the matrix have been visited.
+	# Test if all points have been visited.
+	if matrix[y][x] == w * l:
 		return [(0, path)]
 	# All path we can take, ignoring the boundaries of the matrix
 	#	and the values of the points.
-	points = [
+	points = set([
 		(x - xs, y - ys),
 		(x - ys, y - xs),
 
@@ -55,32 +46,33 @@ def traverse(matrix, size, point, step, path = []):
 		
 		(x + xs, y + ys),
 		(x + ys, y + xs)	
-	]
+	])
 	# Remove points that lie beyond the boundaries of the matrix.
-	points = filter(lambda point: 0 <= point[0] < w and 0 <= point[1] < l, points)
+	points = filter(lambda point: 0 <= point[0] < w and 0 <= point[1] < l, points) 
 	# Remove points that have already been visited.
 	points = filter(lambda point: matrix[point[1]][point[0]] == 0, points)
 	points = list(points)
 	# Check if there are still points available to visit.
 	if not points:
 		# Yep, you're fucked now.
-		return [(len([x for y in matrix for x in filter(lambda x: x == 0, y)]), path)]
+		return [(w * l - matrix[y][x], path)]
 	# Get the distance from the points to the boundaries.
-	db = map(lambda point: min(point[0], w - point[0] - 1) + min(point[1], l - point[1] - 1), points)
-	db = list(db)
+	dp = map(lambda point: (min(min(point[0], w - point[0] - 1),  min(point[1], l - point[1] - 1)), point), points)
+	dp = list(dp)
 	# Shortest distance from a point to the boundaries of the matrix found.
-	minimum = min(db)
+	minimum = min(dp)[0]
 	# The points which have the shortest distance to the edges.
-	points = [points[i] for i, m in enumerate(db) if m == minimum] 
-	points = map(lambda point: (min(min(point[0], w - point[0] - 1), min(point[1], l - point[1] - 1)), point), points)
-	points = sorted(points, key=lambda k: k[0])
-	pl = list(points)
-	points = filter(lambda x: x[0] == pl[0][0], points)
-	points = map(lambda x: x[1], points)
-
+	#points = [points[i] for i, m in enumerate(db) if m == minimum] 
+	#dp = map(lambda point: (min(min(point[0], w - point[0] - 1), min(point[1], l - point[1] - 1)), point), points)
+	dp = sorted(dp, key=lambda k: k[0])
+	#minimum = min(dp)[0]
+	#points = filter(lambda x: x[0] == minimum, dp)
+	#points = map(lambda x: x[1], dp)
 	# Visit the best points available.
-	for best in points:
-		res.extend(traverse(matrix, size, best, step, path))
+	for d, p in dp:
+		print(p)
+		if d > minimum: break
+		res.extend(traverse(matrix, size, p, step, path))
 		
 	return res
 
