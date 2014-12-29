@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 2.6)
+project(brainfuck C)
+add_definitions("-W -Wall -Werror -Wformat-security")
+add_definitions("-std=c89 -O2 -g")
+add_definitions("-fno-exceptions -fstack-protector")
+add_executable(capturego capturego.c)
