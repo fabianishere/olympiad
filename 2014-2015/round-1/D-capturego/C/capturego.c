@@ -21,14 +21,6 @@
 #define BOARD_N 9
 
 /*
- * Represents the state.
- */
-enum State {
-	INITIAL,
-	CORNER_TERMINATION;
-} State;
-
-/*
  * Create a string representation of a point.
  */
 void marshall(int p, char *s) 
@@ -59,10 +51,17 @@ int liberties(int *m, int p)
 	if (v < 0)
 		return 0;
 	
-	i += x - 1 >= 0 ? (!v == m[p - 1] - 1) : 1;
-	i += x + 1 < BOARD_M ? (!v == m[p + 1] - 1) : 1;
-	i += y - 1 >= 0 ? (!v == m[p - 10] - 1) : 1;
-	i += y + 1 < BOARD_N ? (!v == m[p + 10] - 1) : 1;
+	i += x - 1 >= 0 ? !m[p - 1] : 0;
+	i += x + 1 < BOARD_M ? !m[p + 1] : 0;
+	i += y - 1 >= 0 ? !m[p - 9] : 0;
+	i += y + 1 < BOARD_N ? !m[p + 9] : 0;
+
+	m[p] += 2;
+	i += x - 1 >= 0 && v + 1 == m[p - 1] ? liberties(m, p - 1) : 0;
+	i += x + 1 < BOARD_M && v + 1 == m[p + 1] ? liberties(m, p + 1) : 0;
+	i += y - 1 >= 0 && v + 1 == m[p - 9] ? liberties(m, p - 9) : 0;
+	i += y + 1 < BOARD_N && v + 1 == m[p + 9] ? liberties(m, p + 9) : 0;
+	m[p] -= 2;
 	return i;
 }
 
@@ -71,7 +70,7 @@ int liberties(int *m, int p)
  */
 int atari(int *m, int p)
 {
-	return liberties(m, p) == 3;
+	return liberties(m, p) == 1;
 }
 
 /*
@@ -79,15 +78,25 @@ int atari(int *m, int p)
  */
 int captured(int *m, int p)
 {
-	return liberties(m, p) == 4;
+	return liberties(m, p) == 0;
 }
 
 /*
- * Determine whether the stone is placed at a corner..
+ * Draws the game board.
  */
-int is_corner_move(int p)
+void draw(int *m) 
 {
-	return p == 0 || p == 8 || p == 80 || p == 88;
+	for (int x = 0; x < BOARD_M; x++) {
+		for (int y = 0; y < BOARD_N; y++)
+			printf("---");
+		printf("\n|");
+		for (y = 0; y < BOARD_N; y++)
+			printf("%i|", m[BOARD_M * x + y]);
+		printf("\n");
+	}
+	for (int y = 0; y < BOARD_N; y++)
+		printf("---");
+	printf("\n");
 }
 
 /*
@@ -100,7 +109,13 @@ int main(/*int argc, char *argv[]*/)
 	int m[BOARD_M * BOARD_N];
 	int p = 0;
 	int round = 1;
-	enum State state = INITIAL;
+	memset(m, 0, sizeof(m));
+	m[0] = 1;
+	m[1] = 1;
+	m[9] = 2;
+	m[10] = 2;	
+	printf("%i\n", liberties(m, 0));
+	draw(m);
 	fgets(l, 6, stdin);
 	if (strcmp(l, "Start") == 0) {
 		printf("E5\n");
@@ -111,10 +126,7 @@ int main(/*int argc, char *argv[]*/)
 	}
 	while (strcmp(l, "Quit") != 0) {
 		p = unmarshall((char *) &l);
-		m[p] = 2;
-		if (is_corner_move(p) && can_terminate_corner_move(p))
-			
-			
+		m[p] = 2;	
 		round++;
 		fgets(l, 5, stdin);
 	}

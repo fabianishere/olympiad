@@ -14,24 +14,24 @@
 -- limitations under the License.
 import Data.Maybe
 import Data.Either
-import Data.List
+import Data.Vector
 import Data.Char
 
 -- Main entry point
 main :: IO ()
 main = do
-	start <- getLine
-	case start of
-		"Start " -> putStrLn "Starting"
-		_ -> putStrLn $ marshall (unmarshall start)
+    start <- getLine
+    case start of
+        "Start " -> putStrLn "Starting"
+        _ -> putStrLn $ marshall (unmarshall start)
 
 
 
--- unmarshall the given string containing the move
+    -- unmarshall the given string containing the move
 unmarshall :: String -> Int
 unmarshall s = ord (toUpper (head s)) - 65 + (read [(s !! 1)] - 1) * 10
 
--- marshall the given move
+    -- marshall the given move
 marshall :: Int -> String
 marshall k =  [chr (65 + k `mod` 10), chr (k `quot` 10 + 49)]
 
@@ -40,35 +40,35 @@ type Intersection = Either Int Stone
 type Board = [[Intersection]]
 data GameState = Game { board :: Board, turn :: Stone }
 
--- create the initial game state
+    -- create the initial game state
 initialGameState :: GameState
 initialGameState = Game (map (map Left) (map (\x -> map (\y -> 9 * (x - 1) + y) [1..9]) [1..9])) Black
 
--- list the possible moves to play
+    -- list the possible moves to play
 possibleMoves :: Board -> [Int]
 possibleMoves board = [k | Left k <- concat board]
 
--- play a stone at a square
+    -- play a stone at a square
 place :: Int -> GameState -> Maybe GameState
 place k (Game board turn)
     | not (k `elem` possibleMoves board) = Nothing   -- illegal move
     | otherwise = Just $ Game (map (map replace) board) (switch turn)
     where
-    replace (Left k') | k' == k = Right turn
-    replace x                   = x
+        replace (Left k') | k' == k = Right turn
+        replace x                   = x
 
-    switch Black = White
-    switch White = Black
+        switch Black = White
+        switch White = Black
 
--- print the board
+    -- print the board
 showSquare = either (\n -> " " ++ show n ++ " ") (concat . replicate 1 . show)
 
 showBoard :: Board -> String
 showBoard board =
-      unlines . surround "+---+---+---+---+---+---+---+---+---+---+---+"
+    unlines . surround "+---+---+---+---+---+---+---+---+---+---+---+"
     . map (concat . surround "|". map showSquare)
     $ board
     where
-    surround x xs = [x] ++ intersperse x xs ++ [x]
+        surround x xs = [x] ++ intersperse x xs ++ [x]
 
 printBoard = putStr . showBoard
