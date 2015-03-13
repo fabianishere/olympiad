@@ -13,9 +13,9 @@ def sumr(iterable, initial=0):
             return
 start = m[:m.index(m[-1])]
 loop = m[m.index(m[-1]):-1]
-partial = sumr(itertools.cycle(loop), sum(start))
+sums = sumr(itertools.chain(start, itertools.cycle(loop)))
 test = lambda x: x % 2015 == 0
-if sum(loop) % 2015 == 0 and not list(filter(test, sumr(iter(loop), sum(start)))):
+if sum(loop) % 2015 == 0 and not list(filter(test, sumr(itertools.chain(start, loop)))):
     print(0)
-else:
-    print(len(start) + next(filter(lambda t: test(t[1]), enumerate(partial)))[0] + 1)
+else: 
+    print(next(filter(lambda t: test(t[1]), enumerate(sums)))[0] + 1)
