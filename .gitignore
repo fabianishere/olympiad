@@ -3,7 +3,7 @@
 
 # IntelliJ IDEA
 *.iml
-*,idea/
+,idea/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -49,3 +49,4 @@ coverage.xml
 docs/_build/
 
 build
+.idea/
