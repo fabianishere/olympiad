@@ -4,6 +4,7 @@ while True:
     e = int(input())
     m.append(e)
     if e in m[:-1]: break
+
 def sumr(iterable, initial=0):
     while True:
         try:
