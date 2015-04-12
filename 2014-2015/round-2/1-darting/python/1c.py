@@ -10,8 +10,3 @@ def neighbours(items):
     return zip(before, items, after)
 
 print(len(list(filter(lambda x: not (x[0] <= n // 2 < x[1] or x[1] <= n // 2 < x[0]), neighbours(sectors)))))
-
-
-
-
-

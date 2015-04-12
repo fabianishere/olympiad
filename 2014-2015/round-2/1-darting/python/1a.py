@@ -10,4 +10,3 @@ def neighbours(items):
     return zip(before, items, after)
 
 print(len(list(filter(lambda x: not (all(y < x[1] for y in (x[0], x[2])) or all(y > x[1] for y in (x[0], x[2]))), neighbours(sectors)))))
-

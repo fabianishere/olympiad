@@ -10,4 +10,3 @@ def neighbours(items):
     return zip(before, items, after)
 
 print(len(list(filter(lambda x: x[0] % 2 == x[1] % 2, neighbours(sectors)))))
-
