@@ -1,18 +1,17 @@
+import itertools
+
 n = int(input())
-sectors = list(enumerate([int(input()) for _ in range(0, n - 1)]))
+sectors = [n] + [int(input()) for _ in range(0, n - 1)]
 
-def mapping(o):
-    index, sector = o
-    if index > 0: prev = sectors[index - 1]
-    else: prev = (0, sectors[-1][1])
-    if index + 1 < len(sectors): next = sectors[index + 1]
-    else: next = (0, sectors[0][1])
-    return (prev[1], sector, next[1])
+def neighbours(items):
+    before = itertools.chain([next(reversed(items))], items)
+    after = itertools.chain(items, [next(iter(items))])
+    next(after)
+    return zip(before, items, after)
 
-def filtering(o):
-    prev, sector, next = o
-    if prev != -1 and not (prev <= n // 2 < sector or sector <= n // 2 < prev): return o
+print(len(list(filter(lambda x: not (x[0] <= n // 2 < x[1] or x[1] <= n // 2 < x[0]), neighbours(sectors)))))
 
-print(len(list(filter(filtering, map(mapping, sectors)))))
+
+
 
 
