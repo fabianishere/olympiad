@@ -33,6 +33,3 @@ if __name__ == "__main__":
 			bins.append([w])
 		bins = [bins[index] for index, x in sorted(enumerate(map(sum, bins)), key=lambda k: k[1], reverse=True)]
 	print(len(bins))
-			
-	
-			
